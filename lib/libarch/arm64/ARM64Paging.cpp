@@ -25,6 +25,7 @@
 #include "ARM64FirstTable.h"
 #include "ARM64Control.h"
 
+
 ARM64Paging::ARM64Paging(MemoryMap *map, SplitAllocator *alloc)
     : MemoryContext(map, alloc)
     , m_firstTable(0)
@@ -69,6 +70,7 @@ MemoryContext::Result ARM64Paging::allocPageTable(Allocator::Range &phys, Alloca
 
 MemoryContext::Result ARM64Paging::initialize()
 {
+    uart_puts("in ARM64Paging::initialize\n");
     // Allocate first page table if needed
     if (!m_firstTable) {
         Allocator::Range phys, virt;
@@ -81,17 +83,21 @@ MemoryContext::Result ARM64Paging::initialize()
         m_firstTableAddr = phys.address;
     }
 
+    uart_puts("0000\n");
     // Initialize the page directory
     MemoryBlock::set(m_firstTable, 0, sizeof(ARM64FirstTable));
     ARM64FirstTable::initialize(m_firstTable);
 
+    uart_puts("1111\n");
     // Map the kernel. The kernel has permanently mapped 1GB of
     // physical memory. This 1GiB memory region starts at its physical
     // base address offset which varies per core.
     Memory::Range kernelRange = m_map->range(MemoryMap::KernelData);
+    uart_puts("1111.1\n");
     kernelRange.phys = m_kernelBaseAddr;
     m_firstTable->mapLarge(kernelRange, m_alloc);
 
+    uart_puts("2222\n");
     // Temporary stack is used for kernel initialization code
     // and for SMP the temporary stack is shared between cores.
     // This is needed in order to perform early-MMU enable.
@@ -101,9 +107,12 @@ MemoryContext::Result ARM64Paging::initialize()
     };
     m_firstTable->mapLarge(tmpStackRange, m_alloc);
 
+    uart_puts("3333\n");
     // Unmap I/O zone
     for (Size i = 0; i < IO_SIZE; i += MegaByte(2))
         m_firstTable->unmap(IO_BASE + i, m_alloc);
+    
+    uart_puts("4444\n");
 
     // Map the I/O zone as Device / Uncached memory.
     Memory::Range io;
@@ -113,6 +122,7 @@ MemoryContext::Result ARM64Paging::initialize()
     io.access = Memory::Readable | Memory::Writable | Memory::Device;
     m_firstTable->mapLarge(io, m_alloc);
 
+    uart_puts("out ARM64Paging::initialize");
     return MemoryContext::Success;
 }
 

@@ -105,6 +105,9 @@ Kernel::Kernel(CoreInfo *info)
     m_interrupts.fill(ZERO);
 }
 
+extern C void uart_puts(char *s);
+extern C void uart_hex(unsigned int d);
+extern C void uart_hex64(unsigned long long d);
 Error Kernel::initializeHeap()
 {
     // Calculate proper heap address: heap starts after the boot image.

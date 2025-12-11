@@ -244,4 +244,8 @@ ALIGN(8) CPUState;
 
 #define exception_code(esr) (((esr)>>26)&0x3f)
 
+extern C void uart_puts(char *s);
+extern C void uart_hex(unsigned int d);
+extern C void uart_hex64(unsigned long long d);
+
 #endif /* __ARM64_CONTROL_H */
