@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2025 Ivan Tan
  * Copyright (C) 2019 Niek Linnenbank
  *
  * This program is free software: you can redistribute it and/or modify
@@ -56,16 +57,6 @@ RaspberryKernel::RaspberryKernel(CoreInfo *info)
     }
 #endif /* BCM2836 */
 
-#if 0
-    /* Default to broadcom timer and interrupt handling */
-    if (m_timer == NULL)
-    {
-        m_timer = &m_bcmTimer;
-        m_timerIrq = BCM_IRQ_SYSTIMERM1;
-        m_bcmTimer.setFrequency( 250 ); /* trigger timer interrupts at 250Hz (clock runs at 1Mhz) */
-        m_intControl->enable(BCM_IRQ_SYSTIMERM1);
-    }
-#endif
 }
 
 void RaspberryKernel::interrupt(volatile CPUState state)
