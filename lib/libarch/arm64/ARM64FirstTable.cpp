@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2025 Ivan Tan
  * Copyright (C) 2015 Niek Linnenbank
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -20,11 +21,6 @@
 #include <MemoryBlock.h>
 #include "ARM64Constant.h"
 #include "ARM64FirstTable.h"
-
-
-extern C void uart_hex_u64(unsigned long d);
-extern C void uart_hex(unsigned int d);
-extern C void uart_puts(char *s);
 
 void ARM64FirstTable::initialize(ARM64FirstTable *firstTable)
 {
